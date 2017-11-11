@@ -20,7 +20,7 @@ namespace Pixelizator
                            { 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1 },
                            { 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 1 },
                            { 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1 },
-                           { 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1 },//
+                           { 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1 },
                            { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 } };
 
         public FormMain()
@@ -50,29 +50,50 @@ namespace Pixelizator
 
         void Draw()
         {
-            Bitmap bmp = new Bitmap(100, 100);
-            for (int i = 0; i < 100; i++)
-                for (int j = 0; j < 100; j++)
+            int mode = 1;
+            Bitmap bmp = new Bitmap(128, 128);
+            for (int i = 0; i < 128; i++)
+                for (int j = 0; j < 128; j++)
                 {
-                    if (j < 50)
-                        bmp.SetPixel(i, j, color(i, j, i, 1));
+                    if (j < 64)
+                        bmp.SetPixel(i, j, color(i, j, Color.FromArgb(i*2, i*2, i*2), mode));
                     else
-                        bmp.SetPixel(i, j, color(i, j, trackBar1.Value, 1));
+                        bmp.SetPixel(i, j, color(i, j, Color.FromArgb(trackBar1.Value, trackBar1.Value, trackBar1.Value), mode));
                 }
             pictureBox1.Image = bmp;
         }
 
-        Color color(int x, int y, int c, int t)
+        Color color(int x, int y, Color c, int Mode)
         {
-            switch (t)
-            {
-                case 1:
-                    return Pattern[(int)(c / 11.12), x % 4 + y % 4 * 4] == 1 ? Color.White : Color.Black;
-                case 2:
-                    return c > RND.Next(100) ? Color.White : Color.Black;
-                default:
-                    return c > 50 ? Color.White : Color.Black;
-            }
+            return Color.FromArgb(bin(x, y, c.R, Mode) * 50,
+                                  bin(x, y, c.G, Mode) * 50,
+                                  bin(x, y, c.B, Mode) * 50);
+        }
+
+        int bin(int x, int y, int Bright, int Mode)
+        {
+            Bright -= 2;
+            if (Bright < 0) Bright = 0;
+            if (Bright > 249) Bright = 249;
+            int subBright = Bright % 50;
+            if (subBright > 49) subBright = 49;
+            int b = Bright / 50;
+            //Console.WriteLine(Bright + " - " + subBright + " - " + b);
+            if (Mode == 0)
+                b += subBright > 24 ? 1 : 0;
+            if (Mode == 1)
+                b += Pattern[(int)(subBright / 5.55), x % 4 + y % 4 * 4] == 1 ? 1 : 0;
+            if (Mode == 2)
+                b += subBright > RND.Next(50) ? 1 : 0;
+            //Console.WriteLine("            " + b);
+            return b;
+        }
+
+        private void FormMain_Load(object sender, EventArgs e)
+        {
+            //for (int i = 0; i < 256; i++)
+              //  bin(i, 0, i, 0);
+                //Console.WriteLine(i + " - " + bin(i, 0, i, 1));
         }
     }
 }
