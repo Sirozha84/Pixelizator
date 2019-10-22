@@ -21,19 +21,19 @@ namespace Pixelizator
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
         {
             Color256.Mode = 0;
-            Convert();
+            if (BMP != null) Convert();
         }
 
         private void radioButton2_CheckedChanged(object sender, EventArgs e)
         {
             Color256.Mode = 1;
-            Convert();
+            if (BMP != null) Convert();
         }
 
         private void radioButton3_CheckedChanged(object sender, EventArgs e)
         {
             Color256.Mode = 2;
-            Convert();
+            if (BMP != null) Convert();
         }
 
         private void открытьToolStripMenuItem_Click(object sender, EventArgs e)
