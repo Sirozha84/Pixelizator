@@ -5,9 +5,10 @@ namespace Pixelizator
 {
     static class Color256
     {
-        static int Rgrades = 2;
-        static int Ggrades = 2;
-        static int Bgrades = 2;
+        static int Rgrades = 8;
+        static int Ggrades = 8;
+        static int Bgrades = 4;
+
 
         static Color[] Palette;
 
@@ -33,7 +34,7 @@ namespace Pixelizator
         public static byte FromColor(int x, int y, Color c)
         {
             //return (byte)(bin(x, y, c.R, Rgrades) + bin(x, y, c.G, Ggrades) * 6 + bin(x, y, c.B, Bgrades) * 36);
-            return (byte)(bin(x, y, c.R, Rgrades) + bin(x, y, c.G, Ggrades) * Ggrades + bin(x, y, c.B, Bgrades) * Rgrades * Ggrades);
+            return (byte)(bin(x, y, c.R, Rgrades) + bin(x, y, c.G, Ggrades) * Rgrades + bin(x, y, c.B, Bgrades) * Rgrades * Ggrades);
         }
 
         static byte bin(int x, int y, int Bright, int grades)
